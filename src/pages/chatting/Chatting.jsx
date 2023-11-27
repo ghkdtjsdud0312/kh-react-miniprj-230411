@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { KH_SOCKET_URL } from "../../utils/Common";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import AxiosApi from "../../api/AxiosApi";
 
 const ChatContainer = styled.div`
   padding: 20px;
@@ -80,9 +81,11 @@ const Chatting = () => {
   const [inputMsg, setInputMsg] = useState("");
   const [chatList, setChatList] = useState([]);
   const { roomId } = useParams();
-  const sender = window.localStorage.getItem("email");
+  const [sender, setSender] = useState("");
+  const [roomName, setRoomName] = useState(""); // 채팅방 이름
   const ws = useRef(null);
   const navigate = useNavigate(); // useNavigate 훅 추가
+  const email = window.localStorage.getItem("email");
 
   const onChangMsg = (e) => {
     setInputMsg(e.target.value);
@@ -120,7 +123,34 @@ const Chatting = () => {
   };
 
   useEffect(() => {
-    console.log("방번호 : " + roomId);
+    // 이메일로 회원 정보 가져오기
+    const getMember = async() => {
+      try {
+        const rsp = await AxiosApi.memberGetOne(email);
+        console.log(rsp.data.name);
+        setSender(rsp.data.name);
+      }catch(error) {
+        console.log(error);
+      }
+    };
+    getMember();
+  });
+
+  useEffect(() => {
+    // 채팅방 정보 가져오기
+    const getChatRoom = async () => {
+      try {
+        const rsp = await AxiosApi.chatDetail(roomId);
+        console.log(rsp.data.name);
+        setRoomName(rsp.data.name);
+      } catch (error){
+        console.log(error);
+      }
+    };
+    getChatRoom();
+  });
+    useEffect(() => {
+      console.log("방번호 : " + roomId);
     if (!ws.current) {
       ws.current = new WebSocket(KH_SOCKET_URL);
       ws.current.onopen = () => {
@@ -161,7 +191,8 @@ const Chatting = () => {
       <MessagesContainer ref={chatContainerRef}>
         {chatList.map((chat, index) => (
           <Message key={index} isSender={chat.sender === sender}>
-            {`${chat.sender} > ${chat.message}`}
+            {`${chat.message} > ${chat.message}`} {/* 채팅방 들어갔을 때 이름 뜨는 것 */}
+            {/* {`${chat.sender} > ${chat.message}`} 채팅방 들어갔을 때 이름 뜨는 것 */}
           </Message>
         ))}
       </MessagesContainer>

@@ -39,6 +39,7 @@ const Category = () => {
 
   const onRemove = async (id) => {
     const rsp = await AxiosApi.cateDelete(id);
+    console.log(rsp.data);
     if (rsp.data === true) {
       const rsp = await AxiosApi.cateList();
       if (rsp.status === 200) setTodos(rsp.data);

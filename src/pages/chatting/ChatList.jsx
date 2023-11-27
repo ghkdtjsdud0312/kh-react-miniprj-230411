@@ -86,10 +86,11 @@ const CircleFixedButton = styled.button`
 
 function ChatList() {
   const [chatRooms, setChatRooms] = useState([]);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // 경로 저장
 
   useEffect(() => {
     // 서버로부터 채팅방 목록을 가져오는 API 호출
+    // 디비에 저장하는 곳
     const getChatRoom = async () => {
       try {
         const rsp = await AxiosApi.chatList();
@@ -99,15 +100,19 @@ function ChatList() {
         console.log(error);
       }
     };
-    getChatRoom();
+    const intervalID = setInterval(getChatRoom, 1000);
+    return () => {
+      clearInterval(intervalID);
+    };
   }, []);
 
   const enterChatRoom = (roomId) => {
     // 채팅방으로 이동하는 로직 작성
     console.log(`Entering chat room ${roomId}`);
-    navigate(`/chatting/${roomId}`);
+    navigate(`/chatting/${roomId}`); 
   };
 
+  // 새로운 채팅방 입장
   const createChatRoom = () => {
     navigate("/chat-create");
   };
@@ -121,12 +126,12 @@ function ChatList() {
             key={room.roomId}
             onClick={() => enterChatRoom(room.roomId)}
           >
-            <ChatName>{room.name}</ChatName>
-            <ChatDate>{formatDate(room.regDate)}</ChatDate>
+            <ChatName>{room.name}</ChatName> {/* 채팅방 이름 */}
+            <ChatDate>{formatDate(room.regDate)}</ChatDate> {/* 작성 일자 */}
           </ChatRoom>
         ))}
       </ChatUl>
-      <CircleFixedButton onClick={createChatRoom}></CircleFixedButton>
+      <CircleFixedButton onClick={createChatRoom}></CircleFixedButton> {/* '+' 새로운 방 만들기 */}
     </ChatListContainer>
   );
 }
