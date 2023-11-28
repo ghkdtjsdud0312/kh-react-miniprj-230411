@@ -24,7 +24,7 @@ const Common = {
   // 401 에러 처리 함수
   handleUnauthorized: async () => {
     const refreshToken = localStorage.getItem("refreshToken");
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("refreshToken");
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
