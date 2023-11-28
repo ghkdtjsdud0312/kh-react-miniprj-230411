@@ -25,7 +25,7 @@ import AxiosApi from "../api/AxiosApi";
 
 const Layout = () => {
   const context = useContext(UserContext);
-  const { color, name } = context;
+  const { color, name , setName} = context;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const email = localStorage.getItem("email");
@@ -41,8 +41,9 @@ const Layout = () => {
   useEffect(() => {
     const getMember = async () => {
       try {
-        const rsp = await AxiosApi.memberGetOne(email);
+        const rsp = await AxiosApi.memberGetOne();
         setMember(rsp.data);
+        setName(rsp.data.name);
       } catch (e) {
         console.error(e);
       }

@@ -13,7 +13,7 @@ const AxiosApi = {
   },
   //회원 전체 조회
   memberGet: async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     return await axios.get(KH_DOMAIN + `/users/list`, {
       headers: {
         "Content-Type": "application/json",
@@ -22,10 +22,10 @@ const AxiosApi = {
     });
   },
    // 회원 조회
-   memberGetOne: async (email) => {
-    const token = localStorage.getItem("token");
+   memberGetOne: async () => {
+    const token = localStorage.getItem("accessToken");
     console.log("회원 조회 : ", token);
-    return await axios.get(KH_DOMAIN + `/users/detail/${email}`, {
+    return await axios.get(KH_DOMAIN + `/users/detail`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
@@ -49,7 +49,7 @@ const AxiosApi = {
     },
   // 회원 정보 수정
   memberUpdate: async (email, name, image) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     console.log("회원 정보 수정 : ", email, name, image);
     const member = {
       email: email,
@@ -73,7 +73,7 @@ const AxiosApi = {
   },
     // 게시글 조회
     boardList: async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
       return await axios.get(KH_DOMAIN + "/api/board/list", {
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ const AxiosApi = {
     },
    // 게시글 상세 조회
    boardDetail: async (boardId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     return await axios.get(KH_DOMAIN + `/api/board/detail/${boardId}`, {
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const AxiosApi = {
   },
   // 게시글 쓰기
   boardWrite: async (email, title, categoryId, content, img) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     const board = {
       email: email,
       title: title,
@@ -110,7 +110,7 @@ const AxiosApi = {
   },
   // 게시글에 달린 댓글 조회
   commentList: async (boardId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     return await axios.get(KH_DOMAIN + `/api/comment/list/${boardId}`, {
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const AxiosApi = {
   },
     // 댓글 쓰기
     commentWrite: async (email, boardId, content) => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
       const comment = {
         boardId: boardId,
         email: email,
@@ -135,7 +135,7 @@ const AxiosApi = {
     },
    // 카테고리 조회
    cateList: async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     return await axios.get(KH_DOMAIN + `/api/category/list`, {
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const AxiosApi = {
   },
    // 카테고리 쓰기
    cateInsert: async (email, category) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     const cate = {
       email: email,
       categoryName: category,
@@ -159,7 +159,7 @@ const AxiosApi = {
   },
   // 카테고리 삭제
   cateDelete: async (categoryId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     return await axios.delete(
       KH_DOMAIN + `/api/category/delete/${categoryId}`,
       {
@@ -172,7 +172,7 @@ const AxiosApi = {
   },
    // 카테고리 수정
    cateUpdate: async (todoId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     return await axios.put(KH_DOMAIN + `/api/todo/${todoId}`, {
       headers: {
         "Content-Type": "application/json",
@@ -198,7 +198,7 @@ const AxiosApi = {
   },
 // 채팅방 목록 보기
 chatList: async () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   return await axios.get(KH_DOMAIN + "/chat/list", {
     headers: {
       "Content-Type": "application/json",
@@ -208,7 +208,7 @@ chatList: async () => {
 },
  // 채팅방 정보 보기
  chatDetail: async (roomId) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   return await axios.get(KH_DOMAIN + `/chat/room/${roomId}`, {
     headers: {
       "Content-Type": "application/json",
@@ -218,7 +218,7 @@ chatList: async () => {
 },
    // 채팅방 생성
    chatCreate: async (email, name) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     const chat = {
       email: email,
       name: name,
@@ -230,5 +230,16 @@ chatList: async () => {
       },
     });
   },
+
+// 이전 채팅 가져오기
+recentChatLoad: async (roomId) => {
+  const token = localStorage.getItem("accessToken");
+  return await axios.get(KH_DOMAIN + `/chat/message/${roomId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+  });
+},
 };
 export default AxiosApi;

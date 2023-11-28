@@ -36,7 +36,7 @@ const Message = styled.div`
   padding: 10px;
   margin: 10px;
   border-radius: 20px;
-  background-color: ${(props) => (props.isSender ? "#DCF8C6" : "#E0E0E0")};
+  background-color: ${(props) => (props.isSender ? "#6bd31c" : "#E0E0E0")};
   align-self: ${(props) => (props.isSender ? "flex-end" : "flex-start")};
   border: ${(props) =>
     props.isSender ? "1px solid #DCF8C6" : "1px solid #E0E0E0"};
@@ -81,29 +81,29 @@ const Chatting = () => {
   const [inputMsg, setInputMsg] = useState("");
   const [chatList, setChatList] = useState([]);
   const { roomId } = useParams();
-  const [sender, setSender] = useState("");
-  const [roomName, setRoomName] = useState(""); // 채팅방 이름
+  const [chatName, setChatName] = useState(""); // 채팅방 이름
+  const sender = window.localStorage.getItem("email");
   const ws = useRef(null);
   const navigate = useNavigate(); // useNavigate 훅 추가
-  const email = window.localStorage.getItem("email");
+  const userName = localStorage.getItem("name");
 
   const onChangMsg = (e) => {
     setInputMsg(e.target.value);
   };
 
   const onEnterKey = (e) => {
-    if (e.key === "Enter" && inputMsg.trim() !== "") {
-      e.preventDefault();
+    if (e.key === "Enter") 
       onClickMsgSend(e);
-    }
-  };
+    };
 
   const onClickMsgSend = (e) => {
+    e.preventDefault();
     ws.current.send(
       JSON.stringify({
         type: "TALK",
         roomId: roomId,
         sender: sender,
+        senderName: userName, // 닉네임도 보여지게끔
         message: inputMsg,
       })
     );
@@ -115,6 +115,7 @@ const Chatting = () => {
         type: "CLOSE",
         roomId: roomId,
         sender: sender,
+        senderName: userName,
         message: "종료 합니다.",
       })
     );
@@ -122,33 +123,13 @@ const Chatting = () => {
     navigate("/Chat");
   };
 
-  useEffect(() => {
-    // 이메일로 회원 정보 가져오기
-    const getMember = async() => {
-      try {
-        const rsp = await AxiosApi.memberGetOne(email);
-        console.log(rsp.data.name);
-        setSender(rsp.data.name);
-      }catch(error) {
-        console.log(error);
-      }
-    };
-    getMember();
-  });
-
-  useEffect(() => {
-    // 채팅방 정보 가져오기
-    const getChatRoom = async () => {
-      try {
-        const rsp = await AxiosApi.chatDetail(roomId);
-        console.log(rsp.data.name);
-        setRoomName(rsp.data.name);
-      } catch (error){
-        console.log(error);
-      }
-    };
-    getChatRoom();
-  });
+   // 이전 채팅 내용을 가져오는 함수
+   const loadPreviousChat = () => {
+    AxiosApi.recentChatLoad(roomId).then((res) => {
+      const recentMessages = res.data;
+      setChatList(recentMessages);
+    });
+  };
     useEffect(() => {
       console.log("방번호 : " + roomId);
     if (!ws.current) {
@@ -164,6 +145,7 @@ const Chatting = () => {
           type: "ENTER",
           roomId: roomId,
           sender: sender,
+          senderName: userName,
           message: "처음으로 접속 합니다.",
         })
       );
@@ -185,13 +167,30 @@ const Chatting = () => {
     }
   }, [chatList]);
 
+  useEffect(() => {
+    fetchChatName();
+    console.log(chatName);
+  }, []);
+
+  const fetchChatName = async () => {
+    try {
+      const res = await AxiosApi.chatInfo(roomId);
+      console.log("결과결과:" + res.data.name);
+      if (res.data !== null) {
+        setChatName(res.data.name);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <ChatContainer>
-      <ChatHeader>채팅방 {roomName}</ChatHeader>
+      <ChatHeader>{chatName}</ChatHeader>
       <MessagesContainer ref={chatContainerRef}>
         {chatList.map((chat, index) => (
           <Message key={index} isSender={chat.sender === sender}>
-            {`${chat.sender} > ${chat.message}`} {/* 채팅방 들어갔을 때 이름 뜨는 것 */}
+            {`${chat.senderName} > ${chat.message}`} {/* 채팅방 들어갔을 때 이름 뜨는 것 */}
           </Message>
         ))}
       </MessagesContainer>
@@ -207,6 +206,6 @@ const Chatting = () => {
       <CloseButton onClick={onClickMsgClose}>채팅 종료 하기</CloseButton>
     </ChatContainer>
   );
-};
+        };
 
 export default Chatting;
