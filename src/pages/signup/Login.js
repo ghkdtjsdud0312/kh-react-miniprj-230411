@@ -61,18 +61,22 @@ const Login = () => {
   };
   const onClickLogin = async () => {
     //로그인을 위한 axios 호출
+    try{
     const res = await AxiosApi.memberLogin(inputEmail, inputPw);
     console.log(res.data);
-    if (res.data === true) {
-      localStorage.setItem("email", inputEmail); // 브라우저에서 임시로 값을 저장하는 기술
-      localStorage.setItem("userPw", inputPw);
-      localStorage.setItem("isLogin", "TRUE");
+    if (res.data.grantType === "Bearer") {
+      localStorage.setItem("token", res.data.accessToken); // 브라우저에서 임시로 값을 저장하는 기술
       navigate("/home");
     } else {
       setModalOpen(true);
       setModalContent("아이디 및 패스워드를 재확인해 주세요.^^");
     }
-  };
+  } catch(error) {
+    console.log(error);
+    setModalOpen(true);
+    setModalContent("아이디 및 패스워드를 재확인해 주세요.^^");
+  }
+};
 
   return (
     <Container>

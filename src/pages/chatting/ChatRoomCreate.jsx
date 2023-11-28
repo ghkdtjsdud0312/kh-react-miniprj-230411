@@ -50,8 +50,8 @@ function ChatRoomCreate() {
 
   const handleCreateChatRoom = async () => {
     const response = await Axios.chatCreate(email, chatRoomTitle);
-    console.log(response.data); // 채팅방 이름 바꾸는 곳
-    navigate(`/chatting/${response.data}`);
+    console.log(response.data); 
+    navigate(`/chatting/${response.data}`); // 채팅방 이름 바꾸는 곳
   };
 
   const handleCancel = () => {

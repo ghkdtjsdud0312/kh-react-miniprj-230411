@@ -99,7 +99,7 @@ const Signup = () => {
   const onClickLogin = async () => {
     const memberReg = await AxiosApi.memberReg(inputEmail, inputPw, inputName);
     console.log(memberReg.data);
-    if (memberReg.data === true) {
+    if (memberReg.data.email === inputEmail) {
       navigate("/");
     } else {
       setModalOpen(true);

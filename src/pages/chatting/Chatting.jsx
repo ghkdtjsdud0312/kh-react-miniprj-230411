@@ -187,12 +187,11 @@ const Chatting = () => {
 
   return (
     <ChatContainer>
-      <ChatHeader>채팅방 {roomId}</ChatHeader>
+      <ChatHeader>채팅방 {roomName}</ChatHeader>
       <MessagesContainer ref={chatContainerRef}>
         {chatList.map((chat, index) => (
           <Message key={index} isSender={chat.sender === sender}>
-            {`${chat.message} > ${chat.message}`} {/* 채팅방 들어갔을 때 이름 뜨는 것 */}
-            {/* {`${chat.sender} > ${chat.message}`} 채팅방 들어갔을 때 이름 뜨는 것 */}
+            {`${chat.sender} > ${chat.message}`} {/* 채팅방 들어갔을 때 이름 뜨는 것 */}
           </Message>
         ))}
       </MessagesContainer>
