@@ -1,5 +1,6 @@
 import axios from "axios";
 import { KH_DOMAIN } from "../utils/Common";
+import Common from "../utils/Common";
 
 const AxiosApi = {
   // 로그인
@@ -23,15 +24,20 @@ const AxiosApi = {
   },
    // 회원 조회
    memberGetOne: async () => {
+    try{
     const token = localStorage.getItem("accessToken");
-    console.log("회원 조회 : ", token);
     return await axios.get(KH_DOMAIN + `/users/detail`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
     });
-  },
+  } catch (err) {
+    if(err.response && err.response.status === 401) {
+      Common.handleUnathorized();
+    }
+  }
+   },
 
  // 회원 가입
  memberReg: async (email, pwd, name) => {
