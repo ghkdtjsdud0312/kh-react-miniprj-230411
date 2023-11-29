@@ -70,7 +70,7 @@ const Members = () => {
     };
     memberInfo();
   }, []);
-
+ 
   const onClickMember = (email) => {
     console.log("onCLick member : " + email);
     navigate(`/memberInfo/${email}`);

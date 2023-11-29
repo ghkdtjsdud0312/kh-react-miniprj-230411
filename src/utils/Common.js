@@ -20,11 +20,25 @@ export const formatDate = (dateString) => {
   return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`;
 };
 
+
 const Common = {
+  getAccessToken: () => {
+    return localStorage.getItem("accessToken");
+  },
+  setAccessToken: (token) => {
+    localStorage.setItem("accessToken", token);
+  },
+  getRefreshToken: () => {
+    return localStorage.getItem("refreshToken");
+  },
+  setRefreshToken: (token) => {
+    localStorage.setItem("refreshToken", token);
+  },
+
   // 401 에러 처리 함수
   handleUnauthorized: async () => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    const accessToken = localStorage.getItem("refreshToken");
+    const refreshToken = Common.getRefreshToken();
+    const accessToken = Common.getAccessToken();
     const config = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -37,8 +51,8 @@ const Common = {
         config
       );
       console.log(res.data);
-      localStorage.setItem("accessToken", res.data.accessToken);
-      localStorage.setItem("refreshToken", res.data.refreshToken);
+      Common.setAccessToken(res.data.accessToken);
+      Common.setRefreshToken(res.data.refreshToken);
       return true;
     } catch (err) {
       console.log(err);

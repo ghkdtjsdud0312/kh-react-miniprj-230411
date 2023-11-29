@@ -24,19 +24,14 @@ const AxiosApi = {
   },
    // 회원 조회
    memberGetOne: async () => {
-    try{
     const token = localStorage.getItem("accessToken");
+    console.log("회원 조회 : ", token);
     return await axios.get(KH_DOMAIN + `/users/detail`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
     });
-  } catch (err) {
-    if(err.response && err.response.status === 401) {
-      Common.handleUnathorized();
-    }
-  }
    },
 
  // 회원 가입
@@ -188,18 +183,18 @@ const AxiosApi = {
   },
   // 영화 목록 조회
   movieList: async () => {
-    return await axios.get(KH_DOMAIN + "/api/movies/list");
+    return await axios.get(KH_DOMAIN + "/movies/list");
   },
   // 영화 페이지 수 조회
   moviePage: async (page, size) => {
     return await axios.get(
-      KH_DOMAIN + `/api/movies/list/count?page=${page}&size=${size}`
+      KH_DOMAIN + `/movies/list/count?page=${page}&size=${size}`
     );
   },
   // 영화 페이지네이션 조회
   moviePageList: async (page, size) => {
     return await axios.get(
-      KH_DOMAIN + `/api/movies/list/page?page=${page}&size=${size}`
+      KH_DOMAIN + `/movies/list/page?page=${page}&size=${size}`
     );
   },
 // 채팅방 목록 보기

@@ -65,7 +65,10 @@ const Login = () => {
     const res = await AxiosApi.memberLogin(inputEmail, inputPw);
     console.log(res.data);
     if (res.data.grantType === "Bearer") {
-      localStorage.setItem("accessToken", res.data.accessToken); // 브라우저에서 임시로 값을 저장하는 기술
+      console.log("accessToken : ", res.data.accessToken);
+      console.log("refreshToken : ", res.data.refreshToken);
+      window.localStorage.setItem("accessToken", res.data.accessToken); // 브라우저에서 임시로 값을 저장하는 기술
+      window.localStorage.setItem("refreshToken", res.data.refreshToken);
       navigate("/home");
     } else {
       setModalOpen(true);
