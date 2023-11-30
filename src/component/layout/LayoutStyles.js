@@ -26,6 +26,14 @@ export const Container = styled.div`
       margin-top: 12px;
       margin-left: 34px;
     }
+    .welcome {
+      margin-top: 12px;
+      margin-left: 34px;
+    }
+    .current-temp {
+      margin-top: 12px;
+      margin-left: 34px;
+    }
     .setting {
       margin-top: 12px;
       margin-right: 34px;
@@ -84,6 +92,15 @@ export const StyledSideMenu = styled.div`
     props.isOpen ? "translateX(0)" : "translateX(-100%)"};
   transition: transform 0.3s ease;
 `;
+export const Addr = styled.div`
+  display: flex;
+  margin-left: 12px;
+  align-items: center;
+  font-size: 0.9em;
+  font-style: italic;
+  color: #222;
+`;
+
 
 export const StyledMenuList = styled.ul`
   list-style: none;
