@@ -22,16 +22,19 @@ import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import AxiosApi from "../api/AxiosApi";
 import Common from "../utils/Common";
+import useWeather from "./hooks/useWeather";
 
 // 사이드바 메뉴를 구성 합니다.
 
 const Layout = () => {
   const context = useContext(UserContext);
-  const { color, name , setName, addr, temp} = context;
+  const { color, name , setName } = context;
+  // const { addr, temp} = useWeather(""); // 커스텀 훅 사용(움직임에 따라 바뀜)
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   // const email = localStorage.getItem("email");
   const [member, setMember] = useState({});
+  const { addr, temp } = useWeather(); // 커스텀 훅 사용
 
   const onClickLeft = () => {
     setIsMenuOpen(!isMenuOpen);
