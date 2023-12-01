@@ -8,6 +8,8 @@ import {
   Container,
   Items,
 } from "../../component/signup/LoginComponent";
+import PopupAddr from "../../component/address/popupAddr";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,17 +18,22 @@ const Signup = () => {
   const [inputConPw, setInputConPw] = useState("");
   const [inputName, setInputName] = useState("");
   const [inputEmail, setInputEmail] = useState("");
+  const [inputAdd, setInputAdd] = useState("");
+  const [inputAdd2, setInputAdd2] = useState("");
+  const [inputAdd3, setInputAdd3] = useState("");
 
   // 오류 메시지
   const [pwMessage, setPwMessage] = useState("");
   const [conPwMessage, setConPwMessage] = useState("");
   const [mailMessage, setMailMessage] = useState("");
+  const [addMessage, setAddMessage] = useState("");
 
   // 유효성 검사
   const [isMail, setIsMail] = useState(false);
   const [isPw, setIsPw] = useState(false);
   const [isConPw, setIsConPw] = useState(false);
   const [isName, setIsName] = useState(false);
+  const [isAdd, setisAdd] = useState("");
 
   // 팝업
   const [modalOpen, setModalOpen] = useState(false);
@@ -76,6 +83,11 @@ const Signup = () => {
   const onChangeName = (e) => {
     setInputName(e.target.value);
     setIsName(true);
+  };
+  const onChangeAdd3 = (e) => {
+    setInputAdd3(e.target.value);        //inputAdd3으로 하면 한글자씩 밀려여
+    setisAdd(inputAdd + "/" + inputAdd2 + "/" + e.target.value);
+    // 혹은 `${inputAdd}/${inputAdd2}/${e.target.value}` 와 같이 템플릿 리터럴을 사용할 수도 있습니다.
   };
 
   // 회원 가입 여부 확인
@@ -166,6 +178,39 @@ const Signup = () => {
           onChange={onChangeName}
         />
       </Items>
+
+      <Items className="item2">
+   
+      <PopupAddr setInputAdd={setInputAdd} setInputAdd2={setInputAdd2} ></PopupAddr>       
+
+      </Items>
+      <Items className="item2">
+      {inputAdd&&   <Input
+          type="addr"
+          placeholder="상세주소"
+          value={inputAdd}
+        />
+      }     </Items>
+<Items className="item2">
+            {inputAdd2&&  <> <Input
+          type="addr"
+          placeholder="상세주소"
+          value={inputAdd2}
+        />
+        <Items className="item2">
+        <Input
+            type="addr"
+            placeholder="상세주소"
+            value={inputAdd3}
+            onChange={onChangeAdd3}
+          />
+        </Items></>
+      }
+   
+
+      </Items>
+
+
 
       <Items className="item2">
         {isMail && isPw && isConPw && isName ? (
